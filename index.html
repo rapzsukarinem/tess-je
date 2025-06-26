@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Kirim Pesan ke Telegram</title>
+  <style>
+    body {
+      background: #1a1a1a;
+      color: #eee;
+      font-family: sans-serif;
+    }
+    .container {
+      max-width: 400px;
+      margin: 100px auto;
+      padding: 20px;
+      background: #262626;
+      border-radius: 8px;
+    }
+    input, textarea, button {
+      width: 100%;
+      margin-bottom: 12px;
+      padding: 8px;
+      border: none;
+      border-radius: 4px;
+    }
+    input, textarea {
+      background: #333;
+      color: #eee;
+    }
+    button {
+      background: #00aaff;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0088cc;
+    }
+    #status {
+      margin-top: 10px;
+      min-height: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Kirim Pesan ke Telegram</h2>
+    <form id="pesanForm">
+      <input type="text" id="nama" placeholder="Nama kamu" required>
+      <textarea id="pesan" placeholder="Tulis pesan…" required></textarea>
+      <button type="submit">Kirim</button>
+      <div id="status"></div>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById("pesanForm").addEventListener("submit", function(e){
+      e.preventDefault();
+      const nama = document.getElementById("nama").value;
+      const pesan = document.getElementById("pesan").value;
+      const fullPesan = `Pesan dari: ${nama}\n\n${pesan}`;
+
+      const token = "7666061305:AAGvcV4-ZTSJbsR_33Cg8ujaxgLepni8Nns";       // << Ganti dengan token bot Telegram
+      const chat_id = "6700204957";       // << Ganti dengan chat ID Telegram
+      const url = `https://api.telegram.org/bot${token}/sendMessage`;
+
+      fetch(url, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ chat_id, text: fullPesan })
+      })
+      .then(res => {
+        const st = document.getElementById("status");
+        if (res.ok) {
+          st.textContent = "✅ Pesan berhasil dikirim!";
+          st.style.color = "lightgreen";
+        } else {
+          st.textContent = "❌ Gagal mengirim pesan.";
+          st.style.color = "red";
+        }
+      })
+      .catch(err => {
+        document.getElementById("status").textContent = "⚠️ Error: " + err;
+      });
+    });
+  </script>
+</body>
+</html>
